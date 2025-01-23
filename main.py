@@ -1,5 +1,4 @@
 import streamlit as st
-import os
 import base64
 
 def get_base64_video(video_path):
@@ -8,41 +7,15 @@ def get_base64_video(video_path):
         return base64.b64encode(video_file.read()).decode()
 
 def get_app_link(app_name):
-    """
-    Dynamically generate links based on deployment environment.
-    """
+    """Dynamically generate links for different apps."""
     deployment_links = {
-        "IF": {
-            "local": "bioinformatics-if-prediction.streamlit.app",
-           
-        },
-        "Args": {
-            "local": "http://localhost:8502",
-            "production": "https://bioinformatics-args-prediction.streamlit.app/"
-        },
-        "PPIN": {
-            "local": "http://localhost:8503",
-            "production": "https://bioinformatics-ppin-prediction.streamlit.app/"
-        },
-        "Similarity": {
-            "local": "http://localhost:8504",
-            "production": "https://bioinformatics-similarity-prediction.streamlit.app/"
-        }
+        "IF": "https://bioinformatics-if-prediction.streamlit.app",
+        "Args": "https://bioinformatics-arg.streamlit.app",
+        "PPIN": "https://bioinformatics-ppin.streamlit.app",
+        "Similarity": "https://bioinformatics-similarity.streamlit.app"
     }
     
-    # Determine environment with fallback to 'local'
-    env = os.environ.get('STREAMLIT_ENV', 'local')
-    
-    # Add explicit error handling
-    try:
-        link = deployment_links.get(app_name, {}).get(env, None)
-        if not link:
-            st.error(f"No link found for {app_name} in {env} environment")
-            return "#"
-        return link
-    except Exception as e:
-        st.error(f"Error getting link for {app_name}: {str(e)}")
-        return "#"
+    return deployment_links.get(app_name, "#")
 
 st.set_page_config(
     layout="wide",
@@ -158,7 +131,7 @@ def create_card(title: str, description: str, link: str, icon: str = None) -> st
 
 def main():
     # Get the video path
-    video_path = "static/background.mp4"
+    video_path = "background.mp4"
     
     try:
         # Convert video to base64
