@@ -7,6 +7,35 @@ def get_base64_video(video_path):
     with open(video_path, "rb") as video_file:
         return base64.b64encode(video_file.read()).decode()
 
+def get_app_link(app_name):
+    """
+    Dynamically generate links based on deployment environment
+    Modify these URLs to match your actual deployed Streamlit apps
+    """
+    deployment_links = {
+        "IF": {
+            "local": "http://localhost:8501",  # Local development URL
+            "production": "https://bioinformatics-if-prediction.streamlit.app/"  # Deployed URL
+        },
+        "Args": {
+            "local": "http://localhost:8502",
+            "production": "https://your-args-app.streamlit.app/"
+        },
+        "PPIN": {
+            "local": "http://localhost:8503",
+            "production": "https://your-ppin-app.streamlit.app/"
+        },
+        "Similarity": {
+            "local": "http://localhost:8504",
+            "production": "https://your-similarity-app.streamlit.app/"
+        }
+    }
+    
+    # Determine environment - you can set this via environment variable
+    env = os.environ.get('STREAMLIT_ENV', 'local')
+    
+    return deployment_links.get(app_name, {}).get(env, "#")
+
 # Set the page configuration
 st.set_page_config(
     layout="wide",
@@ -26,13 +55,11 @@ hide_streamlit_style = """
     [data-testid="stDecoration"] {visibility: hidden !important;}
     [data-testid="stStatusWidget"] {visibility: hidden !important;}
     
-    /* Remove padding and gap at the top */
     .main .block-container {
         padding-top: 0rem;
         padding-bottom: 0rem;
     }
     
-    /* Remove padding from container */
     .stApp > header + div > div {
         padding-top: 0rem;
     }
@@ -44,13 +71,11 @@ def load_css(video_base64):
     """Generate CSS for styling the application."""
     return f"""
         <style>
-            /* Reset default margins and handle overflow */
             body {{
                 margin: 0;
                 overflow-x: hidden;
             }}
             
-            /* Video background styling */
             .video-container {{
                 position: fixed;
                 right: 0;
@@ -68,27 +93,25 @@ def load_css(video_base64):
                 position: absolute;
                 top: 50%;
                 left: 50%;
-                transform: translate(-50%, -50%) scale(1.00);  /* Reduced zoom scale */
+                transform: translate(-50%, -50%) scale(1.00);
                 min-width: 100%;
                 min-height: 100%;
                 width: auto;
                 height: auto;
-                object-fit: cover;  /* Ensures video covers container without stretching */
+                object-fit: cover;
             }}
             
-            /* Main content container */
             .stApp {{
                 background: none;
             }}
             
-            /* Card styling */
             .card {{
                 background-color: rgba(226, 247, 250, 0.9);
                 border-radius: 20px;
                 padding: 1.5rem;
                 margin: 3rem;
                 text-align: center;
-                box-shadow: 0 4px 6px rgba(0, 1, 2, 0.1);
+                box-shadow: 0 4px 6px rgba(0, 0, 2, 0.1);
                 width: 500px;
                 height: 200px;
                 transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -103,7 +126,6 @@ def load_css(video_base64):
                 box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
             }}
             
-            /* Title styling */
             .main-title {{
                 color: white;
                 text-align: center;
@@ -112,19 +134,16 @@ def load_css(video_base64):
                 margin-top: 0;
             }}
             
-            /* Card title styling */
             .card h3 {{
                 margin-bottom: 1rem;
                 color: #1f1f1f;
             }}
             
-            /* Card description styling */
             .card p {{
                 color: #666;
                 font-size: 0.9rem;
             }}
             
-            /* Add responsive design */
             @media (max-width: 768px) {{
                 .card {{
                     width: 100%;
@@ -139,7 +158,6 @@ def load_css(video_base64):
         </div>
     """
 
-
 def create_card(title: str, description: str, link: str, icon: str = None) -> str:
     icon_html = f"<div style='font-size: 2rem; margin-bottom: 1rem;'>{icon}</div>" if icon else ""
     return f"""
@@ -151,9 +169,6 @@ def create_card(title: str, description: str, link: str, icon: str = None) -> st
             </a>
         </div>
     """
-
-
-
 
 def main():
     # Get the video path
@@ -169,30 +184,30 @@ def main():
         # Create columns for cards
         col1, col2 = st.columns(2)
         
-        # Define cards with icons and descriptions
+        # Define cards with dynamically generated links
         cards = [
             {
                 "title": "(IF)",
-                "description": " 🧬Imprinting Factor (IF) Prediction",
-                "link": "https://bioinformatics-if-prediction.streamlit.app/",
+                "description": "🧬 Imprinting Factor (IF) Prediction",
+                "link": get_app_link("IF"),
                 "icon": "🔬"
             },
             {
                 "title": "Args",
                 "description": "ARG Classifier & Mobility Analyzer",
-                "link": "https://example.com/reports",
+                "link": get_app_link("Args"),
                 "icon": "🧪"
             },
             {
                 "title": "PPIN",
                 "description": "Configure your preferences",
-                "link": "https://example.com/settings",
+                "link": get_app_link("PPIN"),
                 "icon": "🌐"
             },
             {
-                "title": "similarity",
-                "description": "Get support and documentation",
-                "link": "https://example.com/help",
+                "title": "Similarity",
+                "description": "Explore Similarity Metrics",
+                "link": get_app_link("Similarity"),
                 "icon": "🔗"
             }
         ]
