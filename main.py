@@ -13,8 +13,8 @@ def get_app_link(app_name):
     """
     deployment_links = {
         "IF": {
-            "local": "https://bioinformatics-if-prediction.streamlit.app",
-            "production": "https://bioinformatics-if-prediction.streamlit.app"
+            "local": "http://localhost:8501",
+            "production": "https://bioinformatics-if-prediction.streamlit.app/"
         },
         "Args": {
             "local": "http://localhost:8502",
@@ -57,19 +57,6 @@ hide_streamlit_style = """
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
-    .stDeployButton {display: none;}
-    [data-testid="stToolbar"] {visibility: hidden !important;}
-    [data-testid="stDecoration"] {visibility: hidden !important;}
-    [data-testid="stStatusWidget"] {visibility: hidden !important;}
-    
-    .main .block-container {
-        padding-top: 0rem;
-        padding-bottom: 0rem;
-    }
-    
-    .stApp > header + div > div {
-        padding-top: 0rem;
-    }
 </style>
 """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
@@ -160,10 +147,12 @@ def load_css(video_base64):
 def create_card(title: str, description: str, link: str, icon: str = None) -> str:
     icon_html = f"<div style='font-size: 2rem; margin-bottom: 1rem;'>{icon}</div>" if icon else ""
     return f"""
-        <div class="card" onclick="window.location.href='{link}'">
-            {icon_html}
-            <h3>{title}</h3>
-            <p>{description}</p>
+        <div class="card">
+            <a href="{link}" target="_self" style="text-decoration: none; color: inherit;">
+                {icon_html}
+                <h3>{title}</h3>
+                <p>{description}</p>
+            </a>
         </div>
     """
 
