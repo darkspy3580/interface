@@ -17,7 +17,7 @@ def get_app_link(app_name):
             "production": "https://bioinformatics-if-prediction.streamlit.app"
         },
         "Args": {
-            "local": "http://localhost:8502",
+            "local": "https://omics.bjcancer.org/pina/tutorial.action",
             "production": "https://bioinformatics-args-prediction.streamlit.app/"
         },
         "PPIN": {
