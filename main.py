@@ -9,19 +9,40 @@ def get_base64_video(video_path):
 
 def get_app_link(app_name):
     """
-    Dynamically generate links based on page paths.
+    Dynamically generate links based on deployment environment.
     """
-    # Define the page paths for each app
-    page_paths = {
-        "IF": "/pages/args_classifier.py",           # Link for the IF page
-        "Args": "/args-page",       # Link for the Args page
-        "PPIN": "/ppin-page",       # Link for the PPIN page
-        "Similarity": "/similarity-page"  # Link for the Similarity page
+    deployment_links = {
+        "IF": {
+            "local": "bioinformatics-if-prediction.streamlit.app",
+           
+        },
+        "Args": {
+            "local": "http://localhost:8502",
+            "production": "https://bioinformatics-args-prediction.streamlit.app/"
+        },
+        "PPIN": {
+            "local": "http://localhost:8503",
+            "production": "https://bioinformatics-ppin-prediction.streamlit.app/"
+        },
+        "Similarity": {
+            "local": "http://localhost:8504",
+            "production": "https://bioinformatics-similarity-prediction.streamlit.app/"
+        }
     }
     
-    # Get the corresponding path for the given app_name
-    link = page_paths.get(app_name, "#")  # Default to "#" if app_name doesn't match
-    return link
+    # Determine environment with fallback to 'local'
+    env = os.environ.get('STREAMLIT_ENV', 'local')
+    
+    # Add explicit error handling
+    try:
+        link = deployment_links.get(app_name, {}).get(env, None)
+        if not link:
+            st.error(f"No link found for {app_name} in {env} environment")
+            return "#"
+        return link
+    except Exception as e:
+        st.error(f"Error getting link for {app_name}: {str(e)}")
+        return "#"
 
 st.set_page_config(
     layout="wide",
@@ -30,14 +51,12 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# Hide Streamlit's default menu, footer, and sidebar
+# Hide Streamlit's default menu and footer
 hide_streamlit_style = """
 <style>
-    #MainMenu {visibility: hidden;}  /* Hide the main menu */
-    footer {visibility: hidden;}  /* Hide the footer */
-    header {visibility: hidden;}  /* Hide the header */
-    [data-testid="stSidebar"] {visibility: hidden;}  /* Hide the sidebar */
-    div[role="navigation"] {visibility: hidden;}  /* Hide the menu icon */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
 </style>
 """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
@@ -139,7 +158,7 @@ def create_card(title: str, description: str, link: str, icon: str = None) -> st
 
 def main():
     # Get the video path
-    video_path = "background.mp4"
+    video_path = "static/background.mp4"
     
     try:
         # Convert video to base64
