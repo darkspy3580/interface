@@ -10,31 +10,39 @@ def get_base64_video(video_path):
 def get_app_link(app_name):
     """
     Dynamically generate links based on deployment environment
-    Modify these URLs to match your actual deployed Streamlit apps
     """
     deployment_links = {
         "IF": {
-            "local": "http://localhost:8501",  # Local development URL
-            "production": "https://bioinformatics-if-prediction.streamlit.app/"  # Deployed URL
+            "local": "http://localhost:8501",
+            "production": "https://bioinformatics-if-prediction.streamlit.app/"
         },
         "Args": {
             "local": "http://localhost:8502",
-            "production": "https://your-args-app.streamlit.app/"
+            "production": "https://bioinformatics-args-prediction.streamlit.app/"
         },
         "PPIN": {
             "local": "http://localhost:8503",
-            "production": "https://your-ppin-app.streamlit.app/"
+            "production": "https://bioinformatics-ppin-prediction.streamlit.app/"
         },
         "Similarity": {
             "local": "http://localhost:8504",
-            "production": "https://your-similarity-app.streamlit.app/"
+            "production": "https://bioinformatics-similarity-prediction.streamlit.app/"
         }
     }
     
-    # Determine environment - you can set this via environment variable
+    # Determine environment with explicit fallback
     env = os.environ.get('STREAMLIT_ENV', 'local')
     
-    return deployment_links.get(app_name, {}).get(env, "#")
+    # Add explicit error handling
+    try:
+        link = deployment_links.get(app_name, {}).get(env, None)
+        if not link:
+            st.error(f"No link found for {app_name} in {env} environment")
+            return "#"
+        return link
+    except Exception as e:
+        st.error(f"Error getting link for {app_name}: {str(e)}")
+        return "#"
 
 # Set the page configuration
 st.set_page_config(
@@ -162,7 +170,7 @@ def create_card(title: str, description: str, link: str, icon: str = None) -> st
     icon_html = f"<div style='font-size: 2rem; margin-bottom: 1rem;'>{icon}</div>" if icon else ""
     return f"""
         <div class="card">
-            <a href="{link}" target="_self" style="text-decoration: none; color: inherit;">
+            <a href="{link}" style="text-decoration: none; color: inherit;">
                 {icon_html}
                 <h3>{title}</h3>
                 <p>{description}</p>
