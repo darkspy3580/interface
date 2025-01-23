@@ -85,7 +85,52 @@ def load_css(video_base64):
                 transform: translateY(-5px);
                 box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
             }}
+            
+            .card h3 {{
+                margin-bottom: 1rem;
+                color: #1f1f1f;
+            }}
+            
+            .card p {{
+                color: #666;
+                font-size: 0.9rem;
+            }}
+            
+            .stButton>button {{
+                background-color: rgba(226, 247, 250, 0.9);
+                border-radius: 20px;
+                padding: 1.5rem;
+                margin: 3rem;
+                text-align: center;
+                box-shadow: 0 4px 6px rgba(0, 0, 2, 0.1);
+                width: 500px;
+                height: 200px;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                border: none;
+                color: #1f1f1f;
+            }}
+            
+            .stButton>button:hover {{
+                transform: translateY(-5px);
+                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+                background-color: rgba(226, 247, 250, 0.9);
+            }}
+            
+            @media (max-width: 768px) {{
+                .card, .stButton>button {{
+                    width: 100%;
+                    margin: 1rem 0;
+                }}
+            }}
         </style>
+        <div class="video-container">
+            <video id="background-video" autoplay loop muted playsinline>
+                <source src="data:video/mp4;base64,{video_base64}" type="video/mp4">
+            </video>
+        </div>
     """
 
 def main():
@@ -140,12 +185,12 @@ def main():
     # Render apps in columns
     with col1:
         for app in apps[:2]:
-            if st.button(f"{app['icon']} {app['name']}", key=app['name'], use_container_width=True):
+            if st.button(f"{app['icon']} {app['name']}\n\n{app['description']}", key=app['name'], use_container_width=True):
                 st.markdown(f'<meta http-equiv="refresh" content="0;url={app["link"]}">', unsafe_allow_html=True)
 
     with col2:
         for app in apps[2:]:
-            if st.button(f"{app['icon']} {app['name']}", key=app['name'], use_container_width=True):
+            if st.button(f"{app['icon']} {app['name']}\n\n{app['description']}", key=app['name'], use_container_width=True):
                 st.markdown(f'<meta http-equiv="refresh" content="0;url={app["link"]}">', unsafe_allow_html=True)
 
     # Add custom JavaScript for additional link handling
