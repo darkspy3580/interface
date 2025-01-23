@@ -13,7 +13,7 @@ def get_app_link(app_name):
     """
     deployment_links = {
         "IF": {
-            "local": "https://interface-main-background.streamlit.app",
+            "local": "https://bioinformatics-if-prediction.streamlit.app",
             "production": "https://bioinformatics-if-prediction.streamlit.app"
         },
         "Args": {
