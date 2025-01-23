@@ -14,7 +14,7 @@ def get_app_link(app_name):
     deployment_links = {
         "IF": {
             "local": "https://bioinformatics-if-prediction.streamlit.app",
-        
+         
         },
         "Args": {
             "local": "http://localhost:8502",
@@ -44,7 +44,6 @@ def get_app_link(app_name):
         st.error(f"Error getting link for {app_name}: {str(e)}")
         return "#"
 
-# Set the page configuration
 st.set_page_config(
     layout="wide",
     page_title="Interactive Dashboard",
@@ -134,14 +133,6 @@ def load_css(video_base64):
                 box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
             }}
             
-            .main-title {{
-                color: white;
-                text-align: center;
-                padding: 2rem;
-                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-                margin-top: 0;
-            }}
-            
             .card h3 {{
                 margin-bottom: 1rem;
                 color: #1f1f1f;
@@ -170,7 +161,7 @@ def create_card(title: str, description: str, link: str, icon: str = None) -> st
     icon_html = f"<div style='font-size: 2rem; margin-bottom: 1rem;'>{icon}</div>" if icon else ""
     return f"""
         <div class="card">
-            <a href="{link}" style="text-decoration: none; color: inherit;">
+            <a href="{link}" target="_parent" style="text-decoration: none; color: inherit;">
                 {icon_html}
                 <h3>{title}</h3>
                 <p>{description}</p>
