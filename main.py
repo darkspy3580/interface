@@ -3,21 +3,21 @@ import os
 import base64
 
 def get_base64_video(video_path):
-    """Get base64 encoded video"""
+    """Get base64 encoded video."""
     with open(video_path, "rb") as video_file:
         return base64.b64encode(video_file.read()).decode()
 
 def get_app_link(app_name):
     """
-    Dynamically generate links based on deployment environment
+    Dynamically generate links based on deployment environment.
     """
     deployment_links = {
         "IF": {
-            "local": "https://bioinformatics-if-prediction.streamlit.app",
-            "production": "https://bioinformatics-if-prediction.streamlit.app"
+            "local": "http://localhost:8501",
+            "production": "https://bioinformatics-if-prediction.streamlit.app/"
         },
         "Args": {
-            "local": "https://omics.bjcancer.org/pina/tutorial.action",
+            "local": "http://localhost:8502",
             "production": "https://bioinformatics-args-prediction.streamlit.app/"
         },
         "PPIN": {
@@ -30,7 +30,7 @@ def get_app_link(app_name):
         }
     }
     
-    # Determine environment with explicit fallback
+    # Determine environment with fallback to 'local'
     env = os.environ.get('STREAMLIT_ENV', 'local')
     
     # Add explicit error handling
@@ -160,12 +160,10 @@ def load_css(video_base64):
 def create_card(title: str, description: str, link: str, icon: str = None) -> str:
     icon_html = f"<div style='font-size: 2rem; margin-bottom: 1rem;'>{icon}</div>" if icon else ""
     return f"""
-        <div class="card">
-            <a href="{link}" target="_parent" style="text-decoration: none; color: inherit;">
-                {icon_html}
-                <h3>{title}</h3>
-                <p>{description}</p>
-            </a>
+        <div class="card" onclick="window.location.href='{link}'">
+            {icon_html}
+            <h3>{title}</h3>
+            <p>{description}</p>
         </div>
     """
 
@@ -199,7 +197,7 @@ def main():
             },
             {
                 "title": "PPIN",
-                "description": "Configure your preferences",
+                "description": "Protein-Protein Interaction Network Analysis",
                 "link": get_app_link("PPIN"),
                 "icon": "🌐"
             },
