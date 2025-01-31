@@ -14,7 +14,7 @@ def get_app_link(app_name):
     """Dynamically generate links for different apps."""
     deployment_links = {
         "IF": "https://bioinformatics-if-prediction.streamlit.app",
-        "Args": "https://bioinformatics-arg.streamlit.app", 
+        "Args": "https://args-classifier.streamlit.app", 
         "PPIN": "https://bioinformatics-ppin.streamlit.app",
         "Similarity": "https://bioinformatics-similarity.streamlit.app"
     }
